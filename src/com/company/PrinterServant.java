@@ -2,7 +2,6 @@ package com.company;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Queue;
 
 public class PrinterServant extends UnicastRemoteObject implements PrinterService {
 
@@ -48,12 +47,12 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String readConfig(String parameter) throws RemoteException {
-        return "From server: Reading config " + parameter;
+        return "From server: Reading config for parameter: " + parameter;
     }
 
     @Override
     public String setConfig(String parameter, String value) throws RemoteException {
-        return "From server: Setting config " + parameter + " to value " + value;
+        return "From server: Setting config for parameter " + parameter + " to value " + value;
     }
 
 }
