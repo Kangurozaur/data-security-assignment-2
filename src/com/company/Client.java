@@ -1,5 +1,10 @@
 package com.company;
 
+import com.company.passwordstorage.FileCorruptedException;
+import com.company.passwordstorage.PasswordStorage;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -19,6 +24,19 @@ public class Client {
         System.out.println(service.topQueue("HP LaserJet 9000", 3));
         System.out.println(service.print("helloWorld.pdf","HP LaserJet 9000"));
         System.out.println(service.stop());
-        
+
+        try {
+            PasswordStorage ps = new PasswordStorage();
+            ps.load();
+            ps.add("user1", "pass1");
+            ps.add("user2", "pass2");
+            ps.add("user3", "pass3");
+            System.out.println(ps.verify("user1", "pass1"));
+            ps.store();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
