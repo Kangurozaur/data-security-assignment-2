@@ -12,9 +12,18 @@ import java.rmi.RemoteException;
 
 public class Client {
 
+    static double g = 5.0;
+    static double publicKey = 23.0;
+    static double privateKey = 4.0;
+    static double symmetricKey;
     public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
         PrinterService service = (PrinterService) Naming.lookup("rmi://localhost:5099/printer");
-        
+
+        double clientPartialKey = ((Math.pow(g, privateKey)) % publicKey);
+        double serverPartialKey = service.getServerPartialKey(publicKey, g, clientPartialKey);
+        symmetricKey = ((Math.pow(serverPartialKey, privateKey)) % publicKey);
+
+        System.out.println(symmetricKey);
         System.out.println(service.start());
         System.out.println(service.readConfig("ink"));
         System.out.println(service.setConfig("ink", "200"));

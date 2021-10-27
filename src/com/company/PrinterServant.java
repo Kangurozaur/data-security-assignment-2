@@ -5,9 +5,11 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class PrinterServant extends UnicastRemoteObject implements PrinterService {
 
-
-    public PrinterServant() throws  RemoteException {
+    double privateKey;
+    double symmetricKey;
+    public PrinterServant(double privateKey) throws  RemoteException {
         super();
+        this.privateKey = privateKey;
     }
 
     @Override
@@ -53,6 +55,13 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
     @Override
     public String setConfig(String parameter, String value) throws RemoteException {
         return "From server: Setting config for parameter " + parameter + " to value " + value;
+    }
+
+    @Override
+    public double getServerPartialKey(double p, double g, double clientPartialKey) throws RemoteException {
+        double serverPartialKey = ((Math.pow(g, privateKey)) % p);
+        this.symmetricKey = ((Math.pow(clientPartialKey, privateKey)) % p);
+        return serverPartialKey;
     }
 
 }
