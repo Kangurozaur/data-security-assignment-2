@@ -24,15 +24,6 @@ public class Client {
         symmetricKey = ((Math.pow(serverPartialKey, privateKey)) % publicKey);
 
         System.out.println(symmetricKey);
-        System.out.println(service.start());
-        System.out.println(service.readConfig("ink"));
-        System.out.println(service.setConfig("ink", "200"));
-        System.out.println(service.status("HP LaserJet 9000"));
-        System.out.println(service.restart());
-        System.out.println(service.queue("HP LaserJet 9000"));
-        System.out.println(service.topQueue("HP LaserJet 9000", 3));
-        System.out.println(service.print("helloWorld.pdf","HP LaserJet 9000"));
-        System.out.println(service.stop());
 
         try {
             PasswordStorage ps = new PasswordStorage();
@@ -45,6 +36,26 @@ public class Client {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        String accessToken = service.getAccessToken("user2", "pass2");
+        System.out.println(service.start("user2", accessToken));
+        System.out.println(service.start("user2", "foobar"));
+        System.out.println(service.readConfig("ink", "user2", accessToken));
+        System.out.println(service.readConfig("ink", "user2", "foobar"));
+        System.out.println(service.setConfig("ink", "200", "user2", accessToken));
+        System.out.println(service.setConfig("ink", "200", "user2", "foobar"));
+        System.out.println(service.status("HP LaserJet 9000", "user2", accessToken));
+        System.out.println(service.status("HP LaserJet 9000", "user2", "foobar"));
+        System.out.println(service.restart("user2", accessToken));
+        System.out.println(service.restart("user2", "foobar"));
+        System.out.println(service.queue("HP LaserJet 9000", "user2", accessToken));
+        System.out.println(service.queue("HP LaserJet 9000", "user2", "foobar"));
+        System.out.println(service.topQueue("HP LaserJet 9000", 3, "user2", accessToken));
+        System.out.println(service.topQueue("HP LaserJet 9000", 3, "user2", "foobar"));
+        System.out.println(service.print("helloWorld.pdf","HP LaserJet 9000", "user2", accessToken));
+        System.out.println(service.print("helloWorld.pdf","HP LaserJet 9000", "user2", "foobar"));
+        System.out.println(service.stop("user2", accessToken));
+        System.out.println(service.stop("user2", "foobar"));
 
 
     }
