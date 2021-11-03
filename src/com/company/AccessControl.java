@@ -37,4 +37,12 @@ public class AccessControl {
     public Map<String, Set<String>> getAccessControlMap() {
         return _accessControlMap;
     }
+
+    public boolean verify(String username, String methodName) {
+        try {
+            return this._accessControlMap.get(username).contains(methodName);
+        } catch (Exception e){
+            return false;
+        }
+    }
 }

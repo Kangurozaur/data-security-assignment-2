@@ -38,18 +38,6 @@ public class Client {
             e.printStackTrace();
         }
 
-        // Load Access Control List
-        AccessControl ac = new AccessControl();
-        try {
-            ac.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        var accessControlMap = ac.getAccessControlMap();
-
-        System.out.println(accessControlMap.toString());
-
         String accessToken = service.getAccessToken("user2", "pass2");
         System.out.println(service.start("user2", accessToken));
         System.out.println(service.start("user2", "foobar"));

@@ -14,14 +14,29 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
     double privateKey;
     double symmetricKey;
     Map<String, String> accessTokens;
+
+    AccessControl ac;
+
     public PrinterServant(double privateKey) throws  RemoteException {
         super();
         this.privateKey = privateKey;
         this.accessTokens = new HashMap<String,String>();
+
+        // Load Access Control List
+        this.ac = new AccessControl();
+        try {
+            this.ac.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public String print(String filename, String printer, String username, String accessToken) throws RemoteException {
+        var methodName = "print";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Print " + filename + " on printer " + printer;
         } else {
@@ -31,6 +46,10 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String queue(String printer, String username, String accessToken) throws RemoteException {
+        var methodName = "queue";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Queue for printer " + printer;
         } else {
@@ -40,6 +59,10 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String topQueue(String printer, int job, String username, String accessToken) throws RemoteException {
+        var methodName = "topQueue";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Moved job " + job + " to the top of the queue for printer " + printer;
         } else {
@@ -49,6 +72,10 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String start(String username, String accessToken) throws RemoteException {
+        var methodName = "start";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Starting";
         } else {
@@ -58,6 +85,10 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String stop(String username, String accessToken) throws RemoteException {
+        var methodName = "stop";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Stopping";
         } else {
@@ -67,6 +98,10 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String restart(String username, String accessToken) throws RemoteException {
+        var methodName = "restart";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Restarting";
         } else {
@@ -76,6 +111,10 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String status(String printer, String username, String accessToken) throws RemoteException {
+        var methodName = "status";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Status of printer " + printer + " is OK";
         } else {
@@ -85,6 +124,10 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String readConfig(String parameter, String username, String accessToken) throws RemoteException {
+        var methodName = "readConfig";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Reading config for parameter: " + parameter;
         } else {
@@ -94,6 +137,10 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     @Override
     public String setConfig(String parameter, String value, String username, String accessToken) throws RemoteException {
+        var methodName = "setConfig";
+        if (!this.ac.verify(username, methodName)){
+            return "From server: User: " + username + " unauthorized to perform " + methodName + " operation.";
+        }
         if (this.accessTokens.containsKey(username) && this.accessTokens.get(username).equals(accessToken)) {
             return "From server: Setting config for parameter " + parameter + " to value " + value;
         } else {
