@@ -5,9 +5,7 @@ import com.company.passwordstorage.PasswordStorage;
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class PrinterServant extends UnicastRemoteObject implements PrinterService {
 
@@ -29,6 +27,11 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
         } catch (Exception e) {
             e.printStackTrace();
         }
+//        String[] addedRightsUser2 = {"queue"};
+//        ac.addRights("user2", addedRightsUser2)
+//        ac.removeUser("alice");
+//        String[] newAliceRights = {"start", "stop"};
+//        ac.addUser("newAlice", newAliceRights);
     }
 
     @Override
