@@ -1,0 +1,4 @@
+user,null,print;queue
+poweruser,user,topQueue;restart
+technician,null,start;stop;restart;status;readConfig;setConfig
+manager,poweruser;technician,null
