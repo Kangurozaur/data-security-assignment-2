@@ -15,23 +15,11 @@ public class PrinterServant extends UnicastRemoteObject implements PrinterServic
 
     AccessControl ac;
 
-    public PrinterServant(double privateKey) throws  RemoteException {
+    public PrinterServant(double privateKey, AccessControl ac) throws RemoteException {
         super();
         this.privateKey = privateKey;
         this.accessTokens = new HashMap<String,String>();
-
-        // Load Access Control List
-        this.ac = new AccessControl();
-        try {
-            this.ac.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//        String[] addedRightsUser2 = {"queue"};
-//        ac.addRights("user2", addedRightsUser2)
-//        ac.removeUser("alice");
-//        String[] newAliceRights = {"start", "stop"};
-//        ac.addUser("newAlice", newAliceRights);
+        this.ac = ac;
     }
 
     @Override

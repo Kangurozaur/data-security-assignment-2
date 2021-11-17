@@ -28,7 +28,7 @@ public class PasswordStorage {
         reader.close();
     }
 
-    public void store () throws IOException {
+    private void store () throws IOException {
         var writer = new BufferedWriter(new FileWriter(FILE_NAME));
         for (var entry: _passwordMap.entrySet()) {
             var message = entry.getKey() + "," + entry.getValue();
@@ -46,8 +46,14 @@ public class PasswordStorage {
         return stored_password.equals(hashPassword(username, password));
     }
 
-    public void add (String username, String password) throws NoSuchAlgorithmException {
+    public void add (String username, String password) throws NoSuchAlgorithmException, IOException {
         _passwordMap.put(username, hashPassword(username, password));
+        this.store();
+    }
+
+    public void remove (String username) throws IOException {
+        _passwordMap.remove(username);
+        this.store();
     }
 
     private String hashPassword (String username, String password) throws NoSuchAlgorithmException {

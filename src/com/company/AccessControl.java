@@ -2,21 +2,30 @@ package com.company;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import com.company.passwordstorage.FileCorruptedException;
+import com.company.passwordstorage.PasswordStorage;
 
 public class AccessControl {
     final static String FILE_NAME = Paths.get("access_control_list.csv").toAbsolutePath().toString();
     private Map<String, Set<String>> _accessControlMap;
-
-    public AccessControl () {
-        this._accessControlMap = new HashMap<String, Set<String>>();
+    PasswordStorage ps;
+    public AccessControl () throws RemoteException {
+        try{
+            ps = new PasswordStorage();
+            ps.load();
+            this._accessControlMap = new HashMap<String, Set<String>>();
+            this.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void load() throws FileCorruptedException, IOException{
+    private void load() throws FileCorruptedException, IOException{
         var reader = new BufferedReader(new FileReader(FILE_NAME));
         String line;
         while ((line = reader.readLine()) != null) {
@@ -31,10 +40,6 @@ public class AccessControl {
         reader.close();
     }
 
-    public Map<String, Set<String>> getAccessControlMap() {
-        return _accessControlMap;
-    }
-
     public boolean verify(String username, String methodName) {
         try {
             return this._accessControlMap.get(username).contains(methodName);
@@ -43,7 +48,7 @@ public class AccessControl {
         }
     }
 
-    public void store () throws IOException {
+    private void store () throws IOException {
         var writer = new BufferedWriter(new FileWriter(FILE_NAME));
         for (var entry: _accessControlMap.entrySet()) {
             var message = entry.getKey() ;
@@ -93,13 +98,14 @@ public class AccessControl {
         }
         this._accessControlMap.remove(userName);
         try {
+            ps.remove(userName);
             store();
         } catch(Exception e) {
             System.out.println(e.toString());
         }
     }
 
-    public void addUser(String userName, String[] methods) {
+    public void addUser(String userName, String password, String[] methods) {
         if(this._accessControlMap.containsKey(userName)) {
             System.out.println("User " + userName + " already exists");
             return;
@@ -107,10 +113,10 @@ public class AccessControl {
         Set rights = new HashSet<>(Arrays.asList(methods));
         this._accessControlMap.put(userName, rights);
         try {
+            ps.add(userName, password);
             store();
         } catch(Exception e) {
             System.out.println(e.toString());
         }
     }
-
 }

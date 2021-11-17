@@ -19,45 +19,27 @@ public class Client {
     public static void main(String[] args) throws NotBoundException, MalformedURLException, RemoteException {
         PrinterService service = (PrinterService) Naming.lookup("rmi://localhost:5099/printer");
 
-        double clientPartialKey = ((Math.pow(g, privateKey)) % publicKey);
-        double serverPartialKey = service.getServerPartialKey(publicKey, g, clientPartialKey);
-        symmetricKey = ((Math.pow(serverPartialKey, privateKey)) % publicKey);
+        // test different user
+        testServices("Bob", "password", service) ;
+//        testServices("Cecilia", "password", service) ;
+//        testServices("George", "password", service) ;
+//        testServices("Ida", "password", service) ;
+//        testServices("David", "password", service) ;
+//        testServices("Fred", "password", service) ;
+//        testServices("Erica", "password", service) ;
+//        testServices("Henry", "password", service) ;
+    }
 
-        System.out.println(symmetricKey);
-
-        // Load Passwords
-        try {
-            PasswordStorage ps = new PasswordStorage();
-            ps.load();
-            ps.add("user1", "pass1");
-            ps.add("user2", "pass2");
-            ps.add("user3", "pass3");
-            System.out.println(ps.verify("user1", "pass1"));
-            ps.store();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        String accessToken = service.getAccessToken("user2", "pass2");
-        System.out.println(service.start("user2", accessToken));
-        System.out.println(service.start("user2", "foobar"));
-        System.out.println(service.readConfig("ink", "user2", accessToken));
-        System.out.println(service.readConfig("ink", "user2", "foobar"));
-        System.out.println(service.setConfig("ink", "200", "user2", accessToken));
-        System.out.println(service.setConfig("ink", "200", "user2", "foobar"));
-        System.out.println(service.status("HP LaserJet 9000", "user2", accessToken));
-        System.out.println(service.status("HP LaserJet 9000", "user2", "foobar"));
-        System.out.println(service.restart("user2", accessToken));
-        System.out.println(service.restart("user2", "foobar"));
-        System.out.println(service.queue("HP LaserJet 9000", "user2", accessToken));
-        System.out.println(service.queue("HP LaserJet 9000", "user2", "foobar"));
-        System.out.println(service.topQueue("HP LaserJet 9000", 3, "user2", accessToken));
-        System.out.println(service.topQueue("HP LaserJet 9000", 3, "user2", "foobar"));
-        System.out.println(service.print("helloWorld.pdf","HP LaserJet 9000", "user2", accessToken));
-        System.out.println(service.print("helloWorld.pdf","HP LaserJet 9000", "user2", "foobar"));
-        System.out.println(service.stop("user2", accessToken));
-        System.out.println(service.stop("user2", "foobar"));
-
-
+    private static void testServices(String userName, String password, PrinterService service) throws RemoteException {
+        String accessToken = service.getAccessToken(userName, password);
+        System.out.println(service.start(userName, accessToken));
+        System.out.println(service.readConfig("ink", userName, accessToken));
+        System.out.println(service.setConfig("ink", "200", userName, accessToken));
+        System.out.println(service.status("HP LaserJet 9000", userName, accessToken));
+        System.out.println(service.restart(userName, accessToken));
+        System.out.println(service.queue("HP LaserJet 9000", userName, accessToken));
+        System.out.println(service.topQueue("HP LaserJet 9000", 3, userName, accessToken));
+        System.out.println(service.print("helloWorld.pdf","HP LaserJet 9000", userName, accessToken));
+        System.out.println(service.stop(userName, accessToken));
     }
 }
